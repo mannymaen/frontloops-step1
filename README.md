@@ -1,4 +1,4 @@
 # frontloops-step1
  Frontloops Task 1
 
- [mannymaen.github.io/frontloops-step1](mannymaen.github.io/frontloops-step1)
+- View project: [https://mannymaen.github.io/frontloops-step1/](https://mannymaen.github.io/frontloops-step1/)
