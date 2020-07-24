@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+<head>
+		<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Segmented control</title>
+</head>
+<body>
+    <!--
+        Create a segmented control that turns into a <select> for mobile screens.
+        They should sync whenever any of them is changed.
+    -->
+    <div class="row justify-content-center mt-5">
+    	<div class="col-9">
+    		<div class="card">
+    			<div class="card-body mx-auto">
+    				<div id="sortBtnContainer" class="btn-group" role="group">
+                        <button type="button" class="btn sortBtn btn-light" sort-by="price">Sort by price</button>
+                        <button type="button" class="btn sortBtn btn-light" sort-by="name">Sort by name</button>
+                        <button type="button" class="btn sortBtn btn-light" sort-by="relevance">Sort by relevance</button>
+    				</div>
+    				<div id="sortBtnSelectContainer" class="form-group d-none">
+    					<select class="form-control" id="sort-select">
+    						<option value="price">Sort by price</option>
+    						<option value="name">Sort by name</option>
+    						<option value="relevance">Sort by relevance</option>
+    					</select>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+
+</body>
+<script>
+    let sortButtonsObj = [
+        {
+            btn:'sortPrice',
+            sortBy:'price',
+            active:false
+        },
+        {
+            btn:'sortName',
+            sortBy:'name',
+            active:true
+        },
+        {
+            btn:'sortRelevance',
+            sortBy:'relevance',
+            active:false
+        }
+    ]
+	let sortButtons = document.getElementsByClassName('sortBtn');
+    let sortSelect = document.getElementById('sort-select');
+    let sortSelectOps = sortSelect.options;
+    let updateSorts = (sortButtonsObj, sortButtons, sortSelectOps) => {
+        updateButtons(sortButtonsObj, sortButtons);
+        updateSelectOps(sortButtonsObj, sortSelectOps);
+    }
+    let updateButtons = (sortButtonsObj, sortButtons) => {
+        for(btn of sortButtons){
+            let btnObj = sortButtonsObj.find(btnObj=>{
+                return btnObj.sortBy == btn.getAttribute('sort-by')
+            })
+            if (btnObj.active) {
+                btn.classList.replace('btn-light', 'btn-primary');
+            }else{
+                btn.classList.replace('btn-primary', 'btn-light');
+            }
+        }
+    }
+    let updateSelectOps = (sortButtonsObj, sortSelectOps) => {
+        for(btn of sortSelectOps){
+            let btnObj = sortButtonsObj.find(btnObj=>{
+                return btnObj.sortBy == btn.value
+            })
+            if (btnObj.active) {
+                btn.selected = true;
+            }
+        }
+    }
+    let displayInitSortOps = (windowInnerWidth)=>{
+        let sortBtnCont = document.getElementById('sortBtnContainer');
+        let sortBtnSlct = document.getElementById('sortBtnSelectContainer');
+        if (windowInnerWidth >= 912) {
+            sortBtnCont.classList.remove('d-none');
+            sortBtnSlct.classList.add('d-none');
+        }else{
+            sortBtnCont.classList.add('d-none');
+            sortBtnSlct.classList.remove('d-none');
+        }
+    }
+
+    sortSelect.addEventListener('change', function () {
+        sortButtonsObj.forEach(btnObj=>{
+            if (btnObj.sortBy == this.options[this.options.selectedIndex].value) {
+                btnObj.active = true;
+            }else{
+                btnObj.active = false;
+            }
+        })
+        updateSorts(sortButtonsObj, sortButtons, sortSelectOps);
+    })
+
+    for(btn of sortButtons){
+        btn.addEventListener('click', function(){
+            sortButtonsObj.forEach(btnObj=>{
+                if (btnObj.sortBy == this.getAttribute('sort-by')) {
+                    btnObj.active = true;
+                }else{
+                    btnObj.active = false;
+                }
+            })
+            updateSorts(sortButtonsObj, sortButtons, sortSelectOps);
+        })
+    }
+
+
+
+	window.addEventListener('resize', ()=>{
+     displayInitSortOps(window.innerWidth)   
+    })
+
+    updateSorts(sortButtonsObj, sortButtons, sortSelectOps)
+    displayInitSortOps(window.innerWidth);
+</script>
+</html>
